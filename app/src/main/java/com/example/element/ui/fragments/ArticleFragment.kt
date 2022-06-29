@@ -8,6 +8,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.element.R
 import com.example.element.ui.NewsActivity
 import com.example.element.ui.NewsViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_article.*
 
 class ArticleFragment : Fragment(R.layout.fragment_article) {
@@ -22,5 +23,11 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
             webViewClient = WebViewClient()
             loadUrl(article.url)
         }
+
+        fab.setOnClickListener {
+            viewModel.saveArticle(article)
+            Snackbar.make(view, "Articles saved successfully", Snackbar.LENGTH_SHORT).show()
+        }
+
     }
 }
