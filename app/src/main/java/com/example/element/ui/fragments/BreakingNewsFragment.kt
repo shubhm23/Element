@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AbsListView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -44,10 +45,10 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                     hideProgressBar()
                     response.data?.let {
                         newsAdapter.differ.submitList(it.articles.toList())
-                        val totalPages = it.totalResults/ QUERY_PAGE_SIZE + 2
+                        val totalPages = it.totalResults / QUERY_PAGE_SIZE + 2
                         isLastPage = viewModel.breakingNewsPage == totalPages
-                        if(isLastPage){
-                            rvBreakingNews.setPadding(0,0,0,0)
+                        if (isLastPage) {
+                            rvBreakingNews.setPadding(0, 0, 0, 0)
                         }
                     }
                 }
@@ -55,7 +56,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                 is Resources.Error -> {
                     hideProgressBar()
                     response.message?.let {
-                        Log.e(TAG, "An error occured: $it")
+                        Toast.makeText(activity, "An Error Occured: $it", Toast.LENGTH_LONG).show()
                     }
                 }
 
@@ -83,10 +84,10 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     var isLastPage = false
     var isScrolling = false
 
-    val scrollListener = object : RecyclerView.OnScrollListener(){
+    val scrollListener = object : RecyclerView.OnScrollListener() {
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
-            if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL){
+            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                 isScrolling = true
             }
         }
@@ -105,7 +106,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             val isTotalMoreThanVisible = totalItemCount >= QUERY_PAGE_SIZE
             val shouldPaginate = isNotLoadingAndNotLastPage && isAtLastItem && isNotAtBeginning &&
                     isTotalMoreThanVisible && isScrolling
-            if(shouldPaginate){
+            if (shouldPaginate) {
                 viewModel.getBreakingNews("in")
                 isScrolling = false
             }
